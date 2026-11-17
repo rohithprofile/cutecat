@@ -1,5 +1,7 @@
 # Mochi 3D — Interactive Realistic Cat
 
+**Live Demo:** https://rohithprofile.github.io/cutecat/
+
 An interactive 3D cat companion sculpted, rigged, textured, and animated procedurally in Blender 5.3 and rendered in real time with Three.js + GPU fur shells.
 
 ## Features
