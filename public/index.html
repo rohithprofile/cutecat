@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mochi 3D — Interactive Realistic Cat</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>" />
+  <link rel="stylesheet" href="./style.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./three/build/three.module.js",
+        "three/addons/": "./three/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="loader-overlay">
+    <div class="loader-paw">🐾</div>
+    <div class="loader-text">Waking up Mochi (loading Blender 3D rig &amp; 2K fur)...</div>
+    <div class="loader-bar-wrap"><div id="loader-bar"></div></div>
+  </div>
+
+  <div id="canvas-container"></div>
+
+  <div id="top-bar">
+    <div class="glass-pill">
+      <span class="status-dot"></span>
+      <span class="cat-title">Mochi</span>
+      <span id="mood-label">• Curious &amp; Cozy</span>
+      <span class="affection-wrap">
+        <span>♥</span>
+        <span id="affection-count">0</span>
+      </span>
+    </div>
+
+    <div class="top-controls">
+      <button class="icon-btn" id="cam-portrait-btn" title="Portrait Camera">📷 Portrait</button>
+      <button class="icon-btn" id="cam-closeup-btn" title="Close-up Eyes &amp; Whiskers">👁️ Close-Up</button>
+      <button class="icon-btn" id="cam-full-btn" title="Full Cushion View">🛋️ Full View</button>
+      <button class="icon-btn" id="audio-btn" title="Toggle Purr &amp; Meow Sound">🔊 Sound On</button>
+      <button class="icon-btn" id="drawer-btn" title="Coat, Fur &amp; Lighting Studio">✨ Studio</button>
+    </div>
+  </div>
+
+  <div id="reaction-toast"></div>
+  <div id="hint-pill">Stroke head, cheeks or chin to purr • Tap nose to boop • Drag empty space to orbit</div>
+
+  <div id="side-drawer">
+    <div class="drawer-section">
+      <h4>Lighting Mood</h4>
+      <div class="chip-grid" id="lighting-chips">
+        <button class="chip-btn active" data-light="sunbeam">☀️ Sunbeam</button>
+        <button class="chip-btn" data-light="studio">📸 Studio</button>
+        <button class="chip-btn" data-light="moonlight">🌙 Moonlight</button>
+        <button class="chip-btn" data-light="sunset">🌅 Golden Hour</button>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Cat Coat</h4>
+      <div class="chip-grid" id="coat-chips">
+        <button class="chip-btn active" data-coat="ginger"><span class="swatch" style="background:#d97938"></span>Ginger Tabby</button>
+        <button class="chip-btn" data-coat="silver"><span class="swatch" style="background:#8a929a"></span>Silver Tabby</button>
+        <button class="chip-btn" data-coat="cream"><span class="swatch" style="background:#e5cba8"></span>Cream Plush</button>
+        <button class="chip-btn" data-coat="tuxedo"><span class="swatch" style="background:#26282e"></span>Tuxedo</button>
+        <button class="chip-btn" data-coat="siamese"><span class="swatch" style="background:#dfd3c3"></span>Siamese</button>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Eye Color</h4>
+      <div class="chip-grid" id="eye-chips">
+        <button class="chip-btn active" data-eye="emerald"><span class="swatch" style="background:#6ea644"></span>Emerald Gold</button>
+        <button class="chip-btn" data-eye="sapphire"><span class="swatch" style="background:#3b82d6"></span>Sapphire</button>
+        <button class="chip-btn" data-eye="amber"><span class="swatch" style="background:#d98424"></span>Copper Amber</button>
+        <button class="chip-btn" data-eye="odd"><span class="swatch" style="background:linear-gradient(90deg,#3b82d6 50%,#d98424 50%)"></span>Odd-Eyes</button>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h4>Real-Time GPU Fur &amp; Collar</h4>
+      <div class="slider-row">
+        <label>Fur Fluffiness (<span id="fur-val">Plush</span>)</label>
+        <input type="range" id="fur-slider" min="0" max="1" step="0.05" value="0.85" />
+      </div>
+      <div class="chip-grid" style="margin-top:8px;">
+        <button class="chip-btn active" id="collar-toggle">🔔 Collar On</button>
+        <button class="chip-btn" id="pupil-lock-toggle">👁️ Boba Eyes</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="bottom-dock">
+    <button class="dock-btn active" data-mode="pet">✋ Pet</button>
+    <button class="dock-btn" data-mode="laser">🔴 Laser Toy</button>
+    <button class="dock-btn" data-mode="yarn">🧶 Yarn Ball</button>
+    <button class="dock-btn" id="treat-btn">🐟 Toss Treat</button>
+    <div class="dock-divider"></div>
+    <button class="dock-btn" data-anim="Idle">😌 Idle</button>
+    <button class="dock-btn" data-anim="Purr_Knead">💛 Purr Knead</button>
+    <button class="dock-btn" data-anim="Playful_Wave">🐾 Wave</button>
+    <button class="dock-btn" data-anim="Curious_Tilt">❓ Curious</button>
+    <button class="dock-btn" data-anim="Meow">🗣️ Meow</button>
+    <button class="dock-btn" data-anim="Stretch">🧘 Stretch</button>
+    <button class="dock-btn" id="blep-btn">😛 Blep</button>
+    <button class="dock-btn" data-anim="Sleepy_Nap">💤 Nap</button>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

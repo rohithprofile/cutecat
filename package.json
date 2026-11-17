@@ -1,0 +1,11 @@
+{
+  "name": "cute-cat-3d",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "bun run server.js"
+  },
+  "dependencies": {
+    "three": "^0.187.0"
+  }
+}
